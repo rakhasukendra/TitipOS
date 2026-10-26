@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Product extends Model
+{
+    protected $fillable = ['name', 'description', 'price', 'stock', 'umkm_id'];
+
+    protected function casts(): array
+    {
+        return [
+            'price' => 'decimal:2',
+        ];
+    }
+
+    public function umkm(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'umkm_id');
+    }
+
+    public function consignments(): HasMany
+    {
+        return $this->hasMany(Consignment::class);
+    }
+}
