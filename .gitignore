@@ -1,0 +1,16 @@
+node_modules/
+vendor/
+.env
+*.log
+storage/*.key
+.phpunit.result.cache
+public/hot
+public/storage
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/testing/*
+storage/framework/views/*
+storage/logs/*
+bootstrap/cache/*
+.DS_Store
+Thumbs.db
