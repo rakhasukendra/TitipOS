@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TitipOS - Sistem Titipan UKM</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body class="bg-[#F8FAFC]">
     @auth
     <div class="flex h-screen overflow-hidden">
@@ -42,6 +44,17 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                             </svg>
                             <span class="font-semibold">Produk</span>
+                        </a>
+                        @endif
+
+                        {{-- Menu Mitra Toko khusus Admin --}}
+                        @if(auth()->user()->role->slug === 'admin')
+                        <a href="{{ route('stores.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 {{ request()->routeIs('stores.*') ? 'bg-white text-teal-600 shadow-lg' : 'text-white hover:bg-white/10' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01M15 14v.01M15 17v.01"/>
+                            </svg>
+                            <span class="font-semibold">Mitra Toko</span>
                         </a>
                         @endif
 
@@ -165,7 +178,8 @@
         sidebarOverlay?.addEventListener('click', closeSidebar);
     </script>
     @else
-    @yield('content')
+        @yield('content')
     @endauth
 </body>
+
 </html>
