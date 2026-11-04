@@ -6,168 +6,166 @@
     <title>TitipOS - Sistem Titipan UKM</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-50">
-    <div class="min-h-screen flex flex-col">
-        <nav class="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-16">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+<body class="bg-[#F8FAFC]">
+    @auth
+    <div class="flex h-screen overflow-hidden">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-gradient-to-b from-teal-600 via-cyan-600 to-blue-600 transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 shadow-2xl">
+            <div class="flex flex-col h-full">
+                <div class="flex items-center justify-between h-20 px-6 border-b border-white/10">
+                    <a href="{{ route('dashboard') }}" class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-xl">
+                            <svg class="w-7 h-7 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                             </svg>
                         </div>
-                        <span class="font-bold text-xl text-gray-900">TitipOS</span>
-                    </div>
-                    
-                    @auth
-                    <div class="hidden md:flex items-center space-x-1">
-                        <a href="{{ route('dashboard') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('dashboard') ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:bg-gray-100' }}">
-                            Dashboard
+                        <span class="font-bold text-xl text-white">TitipOS</span>
+                    </a>
+                    <button id="sidebar-close" class="lg:hidden p-2 rounded-lg text-white hover:bg-white/10 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <nav class="flex-1 px-4 py-6 overflow-y-auto">
+                    <div class="space-y-2">
+                        <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 {{ request()->routeIs('dashboard') ? 'bg-white text-teal-600 shadow-lg' : 'text-white hover:bg-white/10' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                            </svg>
+                            <span class="font-semibold">Dashboard</span>
                         </a>
-                        
+
                         @if(in_array(auth()->user()->role->slug ?? '', ['umkm', 'admin']))
-                            <a href="{{ route('products.index') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('products.*') ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:bg-gray-100' }}">
-                                Produk
-                            </a>
+                        <a href="{{ route('products.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 {{ request()->routeIs('products.*') ? 'bg-white text-teal-600 shadow-lg' : 'text-white hover:bg-white/10' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                            </svg>
+                            <span class="font-semibold">Produk</span>
+                        </a>
                         @endif
-                        
-                        <a href="{{ route('consignments.index') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('consignments.*') ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:bg-gray-100' }}">
-                            Titipan
+
+                        <a href="{{ route('consignments.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 {{ request()->routeIs('consignments.*') ? 'bg-white text-teal-600 shadow-lg' : 'text-white hover:bg-white/10' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                            <span class="font-semibold">Titipan</span>
                         </a>
-                        <a href="{{ route('sales.index') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('sales.*') ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:bg-gray-100' }}">
-                            Penjualan
+
+                        <a href="{{ route('sales.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 {{ request()->routeIs('sales.*') ? 'bg-white text-teal-600 shadow-lg' : 'text-white hover:bg-white/10' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                            </svg>
+                            <span class="font-semibold">Penjualan</span>
                         </a>
-                        
+
                         @if(in_array(auth()->user()->role->slug ?? '', ['store', 'admin']))
-                            <a href="{{ route('returns.index') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('returns.*') ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:bg-gray-100' }}">
-                                Retur
-                            </a>
+                        <a href="{{ route('returns.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 {{ request()->routeIs('returns.*') ? 'bg-white text-teal-600 shadow-lg' : 'text-white hover:bg-white/10' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
+                            </svg>
+                            <span class="font-semibold">Retur</span>
+                        </a>
                         @endif
-                        
+
                         @if(auth()->user()->role->slug === 'admin')
-                            <a href="{{ route('reports.index') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('reports.*') ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:bg-gray-100' }}">
-                                Laporan
-                            </a>
-                            <a href="{{ route('settlements.index') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('settlements.*') ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:bg-gray-100' }}">
-                                Settlement
-                            </a>
+                        <a href="{{ route('reports.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 {{ request()->routeIs('reports.*') ? 'bg-white text-teal-600 shadow-lg' : 'text-white hover:bg-white/10' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                            <span class="font-semibold">Laporan</span>
+                        </a>
+
+                        <a href="{{ route('settlements.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 {{ request()->routeIs('settlements.*') ? 'bg-white text-teal-600 shadow-lg' : 'text-white hover:bg-white/10' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span class="font-semibold">Settlement</span>
+                        </a>
                         @endif
                     </div>
-                    @endauth
+                </nav>
 
-                    <div class="flex items-center space-x-4">
-                        @auth
-                            <div class="hidden md:flex items-center space-x-3 border-r border-gray-200 pr-4">
-                                <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                                    {{ substr(auth()->user()->name, 0, 1) }}
-                                </div>
-                                <div class="hidden lg:block">
-                                    <div class="text-sm font-semibold text-gray-900">{{ auth()->user()->name }}</div>
-                                    <div class="text-xs text-gray-500">{{ auth()->user()->role->name ?? 'User' }}</div>
-                                </div>
+                <div class="p-4 border-t border-white/10">
+                    <div class="bg-white/10 backdrop-blur-lg rounded-xl p-4 mb-3">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-teal-600 font-bold text-lg shadow-lg">
+                                {{ substr(auth()->user()->name, 0, 1) }}
                             </div>
-                            
-                            <div class="md:hidden">
-                                <button id="mobile-menu-btn" class="p-2 rounded-lg text-gray-700 hover:bg-gray-100">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                                    </svg>
-                                </button>
+                            <div class="flex-1 min-w-0">
+                                <div class="text-sm font-bold text-white truncate">{{ auth()->user()->name }}</div>
+                                <div class="text-xs text-white/80">{{ auth()->user()->role->name ?? 'User' }}</div>
                             </div>
-                            
-                            <form action="{{ route('logout') }}" method="POST" class="hidden md:block">
-                                @csrf
-                                <button type="submit" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">
-                                    Logout
-                                </button>
-                            </form>
-                        @else
-                            <a href="{{ route('login') }}" class="text-gray-700 hover:text-gray-900 text-sm font-medium">Login</a>
-                            <a href="{{ route('register') }}" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-                                Daftar
-                            </a>
-                        @endauth
+                        </div>
                     </div>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-xl bg-white/10 text-white hover:bg-white hover:text-red-600 font-semibold transition-all duration-300">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            </svg>
+                            <span>Logout</span>
+                        </button>
+                    </form>
                 </div>
-
-                @auth
-                <div id="mobile-menu" class="hidden md:hidden pb-4 border-t border-gray-100 mt-2">
-                    <a href="{{ route('dashboard') }}" class="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg {{ request()->routeIs('dashboard') ? 'bg-blue-100 text-blue-700' : '' }}">
-                        Dashboard
-                    </a>
-                    
-                    @if(in_array(auth()->user()->role->slug ?? '', ['umkm', 'admin']))
-                        <a href="{{ route('products.index') }}" class="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg {{ request()->routeIs('products.*') ? 'bg-blue-100 text-blue-700' : '' }}">
-                            Produk
-                        </a>
-                    @endif
-                    
-                    <a href="{{ route('consignments.index') }}" class="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg {{ request()->routeIs('consignments.*') ? 'bg-blue-100 text-blue-700' : '' }}">
-                        Titipan
-                    </a>
-                    <a href="{{ route('sales.index') }}" class="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg {{ request()->routeIs('sales.*') ? 'bg-blue-100 text-blue-700' : '' }}">
-                        Penjualan
-                    </a>
-                    
-                    @if(in_array(auth()->user()->role->slug ?? '', ['store', 'admin']))
-                        <a href="{{ route('returns.index') }}" class="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg {{ request()->routeIs('returns.*') ? 'bg-blue-100 text-blue-700' : '' }}">
-                            Retur
-                        </a>
-                    @endif
-                    
-                    @if(auth()->user()->role->slug === 'admin')
-                        <a href="{{ route('reports.index') }}" class="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg {{ request()->routeIs('reports.*') ? 'bg-blue-100 text-blue-700' : '' }}">
-                            Laporan
-                        </a>
-                        <a href="{{ route('settlements.index') }}" class="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg {{ request()->routeIs('settlements.*') ? 'bg-blue-100 text-blue-700' : '' }}">
-                            Settlement
-                        </a>
-                    @endif
-                    
-                    <div class="border-t border-gray-100 mt-2 pt-2">
-                        <div class="px-4 py-2 text-sm text-gray-700">{{ auth()->user()->name }}</div>
-                        <div class="px-4 py-1 text-xs text-gray-500">{{ auth()->user()->role->name ?? 'User' }}</div>
-                        <form action="{{ route('logout') }}" method="POST" class="mt-2">
-                            @csrf
-                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
-                                Logout
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                @endauth
             </div>
-        </nav>
+        </aside>
 
-        <main class="flex-grow">
-            @if(session('success'))
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-                    <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center space-x-3">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white border-b border-[#E5E7EB] h-20 flex items-center justify-between px-6 shadow-sm">
+                <div class="flex items-center space-x-4">
+                    <button id="sidebar-toggle" class="lg:hidden p-2 rounded-lg text-[#4B5563] hover:bg-[#F3F4F6] transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                    <h1 class="text-2xl font-bold text-[#1F2937]">
+                        @yield('header', 'Dashboard')
+                    </h1>
+                </div>
+                <div class="text-sm text-[#6B7280] font-medium">
+                    {{ now()->format('d M Y, H:i') }}
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-y-auto p-6 bg-[#F8FAFC]">
+                @if(session('success'))
+                    <div class="mb-6 bg-teal-50 border border-teal-200 text-teal-700 px-6 py-4 rounded-xl flex items-center space-x-3 shadow-sm">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                         </svg>
-                        <span>{{ session('success') }}</span>
+                        <span class="font-semibold">{{ session('success') }}</span>
                     </div>
-                </div>
-            @endif
-            @yield('content')
-        </main>
-
-        <footer class="bg-white border-t border-gray-100 mt-16">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div class="text-center text-gray-600 text-sm">
-                    <p>&copy; 2026 TitipOS - Sistem Manajemen Titipan UKM</p>
-                </div>
-            </div>
-        </footer>
+                @endif
+                @yield('content')
+            </main>
+        </div>
     </div>
 
+    <div id="sidebar-overlay" class="hidden fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-sm"></div>
+
     <script>
-        document.getElementById('mobile-menu-btn')?.addEventListener('click', function() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        });
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebarClose = document.getElementById('sidebar-close');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            sidebarOverlay.classList.remove('hidden');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('hidden');
+        }
+
+        sidebarToggle?.addEventListener('click', openSidebar);
+        sidebarClose?.addEventListener('click', closeSidebar);
+        sidebarOverlay?.addEventListener('click', closeSidebar);
     </script>
+    @else
+    @yield('content')
+    @endauth
 </body>
 </html>
