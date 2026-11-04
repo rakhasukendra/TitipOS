@@ -165,15 +165,6 @@
                             </a>
                         </p>
                     </div>
-
-                    <div class="mt-6 pt-6 border-t border-gray-100 text-center">
-                        <a href="{{ url('/') }}" class="flex items-center justify-center space-x-2 text-[#4B5563] hover:text-[#1F2937] transition">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                            </svg>
-                            <span>Kembali ke Beranda</span>
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
