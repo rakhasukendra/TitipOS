@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Settlement extends Model
 {
@@ -38,5 +39,10 @@ class Settlement extends Model
     public function umkm(): BelongsTo
     {
         return $this->belongsTo(User::class, 'umkm_id');
+    }
+
+    public function consignments(): HasMany
+    {
+        return $this->hasMany(Consignment::class);
     }
 }

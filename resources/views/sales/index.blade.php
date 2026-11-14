@@ -1,70 +1,83 @@
 @extends('layouts.app')
 
+@section('header', 'Penjualan')
+@section('subheader', 'Transaksi penjualan dari barang titipan')
+
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Daftar Penjualan</h1>
-        <a href="{{ route('sales.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+@php
+    $metrics = [
+        ['label' => 'Transaksi', 'value' => $stats['total'] . ' kali'],
+        ['label' => 'Unit terjual', 'value' => $stats['units'] . ' pcs'],
+        ['label' => 'Omzet', 'value' => 'Rp ' . number_format($stats['revenue'], 0, ',', '.')],
+        ['label' => 'Rata-rata', 'value' => 'Rp ' . number_format($stats['average'], 0, ',', '.')],
+    ];
+@endphp
+
+<div class="surface overflow-hidden">
+    <x-list-header eyebrow="Penjualan" title="Riwayat Penjualan" :metrics="$metrics">
+        <x-slot:actions>
+        @if(in_array(auth()->user()->role->slug ?? '', ['store', 'admin']))
+        <a href="{{ route('sales.create') }}" class="btn btn-primary btn-sm">
+            <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
             Catat Penjualan
         </a>
-    </div>
-
-    @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <div class="bg-white shadow rounded-lg overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+        @endif
+        </x-slot:actions>
+    </x-list-header>
+    <div class="overflow-x-auto">
+        <table class="w-full min-w-[820px] text-left">
+            <thead class="border-b border-hairline bg-canvas/60">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Produk</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Toko</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jumlah</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                    <th class="th">Produk</th>
+                    <th class="th">Toko</th>
+                    <th class="th">Jumlah</th>
+                    <th class="th">Total</th>
+                    <th class="th">Tanggal</th>
+                    <th class="th text-right">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="divide-y divide-hairline">
                 @forelse($sales as $sale)
-                <tr>
-                    <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                        {{ $sale->consignment->product->name }}
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                        {{ $sale->consignment->store->name }}
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                        {{ $sale->quantity }} pcs
-                    </td>
-                    <td class="px-6 py-4 text-sm font-semibold text-green-600">
-                        Rp {{ number_format($sale->amount, 0, ',', '.') }}
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-500">
-                        {{ $sale->sale_date->format('d M Y') }}
-                    </td>
-                    <td class="px-6 py-4 text-sm space-x-2">
-                        <a href="{{ route('sales.show', $sale) }}" class="text-blue-600 hover:text-blue-900">Detail</a>
-                        <form action="{{ route('sales.destroy', $sale) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Yakin hapus penjualan ini?')">Hapus</button>
-                        </form>
+                <tr class="transition hover:bg-canvas/60">
+                    <td class="td font-medium text-ink-900">{{ $sale->consignment->product->name }}</td>
+                    <td class="td">{{ $sale->consignment->store->name }}</td>
+                    <td class="td tabular-nums">{{ $sale->quantity }} <span class="text-xs text-ink-500">pcs</span></td>
+                    <td class="td font-semibold tabular-nums text-brand-600">Rp {{ number_format($sale->amount, 0, ',', '.') }}</td>
+                    <td class="td text-ink-500">{{ $sale->sale_date->format('d M Y') }}</td>
+                    <td class="td">
+                        <div class="flex items-center justify-end gap-3">
+                            <a href="{{ route('sales.show', $sale) }}" class="link-muted">Detail</a>
+                            @if(in_array(auth()->user()->role->slug ?? '', ['store', 'admin']))
+                            <form action="{{ route('sales.destroy', $sale) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="link-danger" onclick="return confirm('Yakin hapus penjualan ini?')">Hapus</button>
+                            </form>
+                            @endif
+                        </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">Belum ada penjualan</td>
+                    <td colspan="6" class="px-5 py-16 text-center">
+                        <div class="mx-auto flex size-12 items-center justify-center rounded-full border border-dashed border-hairline text-ink-400">
+                            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                            </svg>
+                        </div>
+                        <p class="mt-3 text-sm font-medium text-ink-900">Belum ada penjualan</p>
+                        <p class="mt-1 text-xs text-ink-500">Setiap penjualan yang dicatat akan muncul di sini.</p>
+                    </td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
+</div>
 
-    <div class="mt-4">
-        {{ $sales->links() }}
-    </div>
+<div class="mt-6">
+    {{ $sales->links() }}
 </div>
 @endsection

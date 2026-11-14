@@ -1,79 +1,86 @@
 @extends('layouts.app')
 
+@section('header', 'Settlement')
+@section('subheader', 'Penyelesaian pembayaran antara toko dan UMKM')
+
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Daftar Settlement</h1>
-        <a href="{{ route('settlements.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-            Buat Settlement Baru
+@php
+    $metrics = [
+        ['label' => 'Settlement', 'value' => $stats['total'] . ' dokumen'],
+        ['label' => 'Sudah dibayar', 'value' => 'Rp ' . number_format($stats['paid'], 0, ',', '.')],
+        ['label' => 'Menunggu', 'value' => 'Rp ' . number_format($stats['pending'], 0, ',', '.')],
+    ];
+@endphp
+
+<div class="surface overflow-hidden">
+    <x-list-header eyebrow="Settlement" title="Daftar Settlement" :metrics="$metrics">
+        <x-slot:actions>
+        <a href="{{ route('settlements.create') }}" class="btn btn-primary btn-sm">
+            <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Buat Settlement
         </a>
-    </div>
-
-    @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <div class="bg-white shadow rounded-lg overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+        </x-slot:actions>
+    </x-list-header>
+    <div class="overflow-x-auto">
+        <table class="w-full min-w-[980px] text-left">
+            <thead class="border-b border-hairline bg-canvas/60">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Toko</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">UMKM</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Penjualan</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Retur</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Netto</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                    <th class="th">Toko</th>
+                    <th class="th">UMKM</th>
+                    <th class="th">Total Penjualan</th>
+                    <th class="th">Total Retur</th>
+                    <th class="th">Netto</th>
+                    <th class="th">Status</th>
+                    <th class="th text-right">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="divide-y divide-hairline">
                 @forelse($settlements as $settlement)
-                <tr>
-                    <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                        {{ $settlement->store->name }}
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                        {{ $settlement->umkm->name }}
-                    </td>
-                    <td class="px-6 py-4 text-sm text-green-600 font-semibold">
-                        Rp {{ number_format($settlement->total_sales, 0, ',', '.') }}
-                    </td>
-                    <td class="px-6 py-4 text-sm text-red-600 font-semibold">
-                        Rp {{ number_format($settlement->total_returns, 0, ',', '.') }}
-                    </td>
-                    <td class="px-6 py-4 text-sm text-blue-600 font-semibold">
-                        Rp {{ number_format($settlement->net_amount, 0, ',', '.') }}
-                    </td>
-                    <td class="px-6 py-4">
-                        <span class="px-2 py-1 rounded text-xs font-medium
-                            {{ $settlement->settled_at ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                <tr class="transition hover:bg-canvas/60">
+                    <td class="td font-medium text-ink-900">{{ $settlement->store->name }}</td>
+                    <td class="td">{{ $settlement->umkm->name }}</td>
+                    <td class="td tabular-nums">Rp {{ number_format($settlement->total_sales, 0, ',', '.') }}</td>
+                    <td class="td tabular-nums text-rose-600">-Rp {{ number_format($settlement->total_returns, 0, ',', '.') }}</td>
+                    <td class="td font-semibold tabular-nums text-brand-600">Rp {{ number_format($settlement->net_amount, 0, ',', '.') }}</td>
+                    <td class="td">
+                        <span class="badge {{ $settlement->settled_at ? 'badge-success' : 'badge-warning' }}">
                             {{ $settlement->settled_at ? 'Settled' : 'Pending' }}
                         </span>
                     </td>
-                    <td class="px-6 py-4 text-sm space-x-2">
-                        <a href="{{ route('settlements.show', $settlement) }}" class="text-blue-600 hover:text-blue-900">Detail</a>
-                        @if(!$settlement->settled_at)
-                            <form action="{{ route('settlements.destroy', $settlement) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Yakin hapus settlement ini?')">Hapus</button>
-                            </form>
-                        @endif
+                    <td class="td">
+                        <div class="flex items-center justify-end gap-3">
+                            <a href="{{ route('settlements.show', $settlement) }}" class="link-muted">Detail</a>
+                            @if(!$settlement->settled_at)
+                                <form action="{{ route('settlements.destroy', $settlement) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="link-danger" onclick="return confirm('Yakin hapus settlement ini?')">Hapus</button>
+                                </form>
+                            @endif
+                        </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">Belum ada settlement</td>
+                    <td colspan="7" class="px-5 py-16 text-center">
+                        <div class="mx-auto flex size-12 items-center justify-center rounded-full border border-dashed border-hairline text-ink-400">
+                            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <p class="mt-3 text-sm font-medium text-ink-900">Belum ada settlement</p>
+                        <p class="mt-1 text-xs text-ink-500">Buat settlement untuk menutup periode penjualan toko.</p>
+                    </td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
+</div>
 
-    <div class="mt-4">
-        {{ $settlements->links() }}
-    </div>
+<div class="mt-6">
+    {{ $settlements->links() }}
 </div>
 @endsection

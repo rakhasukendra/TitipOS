@@ -29,13 +29,20 @@ Route::middleware(['role:umkm,admin'])->group(function () {
     Route::resource('products', ProductController::class);
     Route::post('/consignments', [ConsignmentController::class, 'store'])->name('consignments.store');
     Route::get('/consignments/create', [ConsignmentController::class, 'create'])->name('consignments.create');
+    Route::get('/consignments/{consignment}/edit', [ConsignmentController::class, 'edit'])->name('consignments.edit');
+    Route::put('/consignments/{consignment}', [ConsignmentController::class, 'update'])->name('consignments.update');
+    Route::delete('/consignments/{consignment}', [ConsignmentController::class, 'destroy'])->name('consignments.destroy');
 });
 
 Route::middleware(['role:store,admin'])->group(function () {
+    Route::post('/consignments/{consignment}/approve', [ConsignmentController::class, 'approve'])->name('consignments.approve');
+    Route::post('/consignments/{consignment}/reject', [ConsignmentController::class, 'reject'])->name('consignments.reject');
+    Route::patch('/consignments/{consignment}/status', [ConsignmentController::class, 'updateStatus'])->name('consignments.status');
+
     Route::post('/sales', [SalesController::class, 'store'])->name('sales.store');
     Route::get('/sales/create', [SalesController::class, 'create'])->name('sales.create');
     Route::delete('/sales/{sale}', [SalesController::class, 'destroy'])->name('sales.destroy');
-    
+
     Route::post('/returns', [ReturnController::class, 'store'])->name('returns.store');
     Route::get('/returns/create', [ReturnController::class, 'create'])->name('returns.create');
     Route::delete('/returns/{return}', [ReturnController::class, 'destroy'])->name('returns.destroy');
@@ -44,20 +51,17 @@ Route::middleware(['role:store,admin'])->group(function () {
 Route::middleware(['role:umkm,store,admin'])->group(function () {
     Route::get('/consignments', [ConsignmentController::class, 'index'])->name('consignments.index');
     Route::get('/consignments/{consignment}', [ConsignmentController::class, 'show'])->name('consignments.show');
-    Route::get('/consignments/{consignment}/edit', [ConsignmentController::class, 'edit'])->name('consignments.edit');
-    Route::put('/consignments/{consignment}', [ConsignmentController::class, 'update'])->name('consignments.update');
-    Route::delete('/consignments/{consignment}', [ConsignmentController::class, 'destroy'])->name('consignments.destroy');
-    
+
     Route::get('/sales', [SalesController::class, 'index'])->name('sales.index');
     Route::get('/sales/{sale}', [SalesController::class, 'show'])->name('sales.show');
-    
+
     Route::get('/returns', [ReturnController::class, 'index'])->name('returns.index');
     Route::get('/returns/{return}', [ReturnController::class, 'show'])->name('returns.show');
 });
 
 Route::middleware(['role:admin'])->group(function () {
-    Route::resource('settlements', SettlementController::class);
-    Route::get('/reports', function() {
+    Route::resource('settlements', SettlementController::class)->except('edit');
+    Route::get('/reports', function () {
         return view('reports.index');
     })->name('reports.index');
 });

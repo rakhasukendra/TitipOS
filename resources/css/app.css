@@ -6,4 +6,180 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Neutral canvas & hairline borders for a calm, editorial feel */
+    --color-canvas: #f7f7f4;
+    --color-hairline: #e7e4de;
+
+    /* Ink scale for typography */
+    --color-ink-400: #9ca1a6;
+    --color-ink-500: #71777d;
+    --color-ink-700: #3c4147;
+    --color-ink-900: #16191d;
+
+    /* Single, sparingly used accent */
+    --color-brand-50: #eef8f2;
+    --color-brand-100: #d4efe2;
+    --color-brand-600: #0e7c5b;
+    --color-brand-700: #0a6148;
+}
+
+@layer base {
+    body {
+        @apply bg-canvas text-ink-900 antialiased;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border: 3px solid transparent;
+        border-radius: 9999px;
+        background-color: #d9d5cd;
+        background-clip: content-box;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+}
+
+@layer components {
+    /* --- Surfaces ------------------------------------------------------- */
+    .surface {
+        @apply rounded-2xl border border-hairline bg-white;
+    }
+
+    .section-label {
+        @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-400;
+    }
+
+    /* --- Buttons -------------------------------------------------------- */
+    .btn {
+        @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl px-3.5 py-2.5 text-sm font-semibold transition duration-150 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-600/15 disabled:pointer-events-none disabled:opacity-50;
+    }
+
+    .btn-primary {
+        @apply bg-ink-900 text-white shadow-sm hover:bg-ink-700;
+    }
+
+    .btn-secondary {
+        @apply border border-hairline bg-white text-ink-700 hover:border-ink-400/50 hover:text-ink-900;
+    }
+
+    .btn-success {
+        @apply bg-brand-600 text-white shadow-sm hover:bg-brand-700;
+    }
+
+    .btn-sm {
+        @apply gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px];
+    }
+
+    .link-muted {
+        @apply text-[13px] font-medium text-ink-500 transition hover:text-ink-900;
+    }
+
+    .link-danger {
+        @apply text-[13px] font-medium text-rose-600 transition hover:text-rose-700;
+    }
+
+    /* --- Navigation ----------------------------------------------------- */
+    .nav-link {
+        @apply flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-ink-500 transition duration-150 hover:bg-canvas hover:text-ink-900;
+    }
+
+    .nav-link-active {
+        @apply bg-ink-900 text-white shadow-sm hover:bg-ink-900 hover:text-white;
+    }
+
+    .nav-icon {
+        @apply size-[18px] shrink-0;
+    }
+
+    /* --- Forms ---------------------------------------------------------- */
+    .label {
+        @apply mb-1.5 block text-[13px] font-medium text-ink-700;
+    }
+
+    .field {
+        @apply block w-full rounded-xl border border-hairline bg-white px-3.5 py-2.5 text-sm text-ink-900 transition placeholder:text-ink-400 focus:border-brand-600 focus:outline-none focus:ring-4 focus:ring-brand-600/15;
+    }
+
+    .field-error {
+        @apply border-rose-300 focus:border-rose-400 focus:ring-rose-500/15;
+    }
+
+    .field-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2371777d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-position: right 0.875rem center;
+        background-repeat: no-repeat;
+        background-size: 1rem;
+        padding-right: 2.5rem;
+    }
+
+    .hint {
+        @apply mt-1.5 text-xs text-ink-500;
+    }
+
+    .error-text {
+        @apply mt-1.5 text-xs font-medium text-rose-600;
+    }
+
+    /* --- Badges --------------------------------------------------------- */
+    .badge {
+        @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wide;
+    }
+
+    .badge-success {
+        @apply bg-brand-50 text-brand-700;
+    }
+
+    .badge-info {
+        @apply bg-sky-50 text-sky-700;
+    }
+
+    .badge-warning {
+        @apply bg-amber-50 text-amber-700;
+    }
+
+    .badge-danger {
+        @apply bg-rose-50 text-rose-600;
+    }
+
+    .badge-neutral {
+        @apply bg-canvas text-ink-500;
+    }
+
+    /* Compact status picker for consignment tables */
+    .status-select {
+        @apply cursor-pointer appearance-none rounded-full border-0 py-1 pl-3 pr-7 text-[11px] font-semibold tracking-wide transition focus:outline-none focus:ring-4 focus:ring-brand-600/15;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2371777d' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 0.7rem;
+    }
+
+    /* --- Charts --------------------------------------------------------- */
+    .chart-axis-text {
+        font-size: 16px;
+        fill: var(--color-ink-400);
+    }
+
+    @media (min-width: 640px) {
+        .chart-axis-text {
+            font-size: 11px;
+        }
+    }
+
+    /* --- Tables --------------------------------------------------------- */
+    .th {
+        @apply whitespace-nowrap px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.09em] text-ink-400;
+    }
+
+    .td {
+        @apply px-5 py-4 align-middle text-sm text-ink-700;
+    }
 }
