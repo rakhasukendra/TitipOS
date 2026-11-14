@@ -3,40 +3,64 @@
 namespace Database\Seeders;
 
 use App\Models\Role;
+use App\Models\Store;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $umkmRole = Role::where('slug', 'umkm')->first();
-        $storeRole = Role::where('slug', 'store')->first();
+        $umkmRole = Role::where('slug', 'umkm')->firstOrFail();
+        $storeRole = Role::where('slug', 'store')->firstOrFail();
         $adminRole = Role::where('slug', 'admin')->first();
 
-        $umkm = User::create([
-            'name' => 'UMKM Test',
-            'email' => 'umkm@example.com',
-            'password' => Hash::make('password'),
-            'role_id' => $umkmRole?->id,
+        // Membuat akun UMKM Owner.
+        User::firstOrCreate(
+            ['email' => 'umkm@example.com'],
+            [
+                'name' => 'UMKM Test',
+                'password' => 'password',
+                'role_id' => $umkmRole->id,
+            ]
+        );
+
+        // Membuat akun Store Manager.
+        $manager = User::firstOrCreate(
+            ['email' => 'store@example.com'],
+            [
+                'name' => 'Store Manager',
+                'password' => 'password',
+                'role_id' => $storeRole->id,
+            ]
+        );
+
+        // Membuat toko yang dikelola Store Manager.
+        $store = Store::firstOrCreate(
+            ['manager_id' => $manager->id],
+            [
+                'name' => 'Toko Test',
+                'address' => 'Jl. Test No. 1',
+                'phone' => '081234567890',
+                'email' => 'store@example.com',
+            ]
+        );
+
+        // Menghubungkan akun Store Manager dengan tokonya.
+        $manager->update([
+            'store_id' => $store->id,
         ]);
 
-        $storeManager = User::create([
-            'name' => 'Store Manager',
-            'email' => 'store@example.com',
-            'password' => Hash::make('password'),
-            'role_id' => $storeRole?->id,
-        ]);
-
-        $store = $storeManager->store()->create(['name' => 'Toko Test', 'address' => 'Jl. Test No. 1']);
-        $store->update(['manager_id' => $storeManager->id]);
-
-        User::create([
-            'name' => 'Admin Test',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
-            'role_id' => $adminRole?->id,
-        ]);
+        // Membuat akun Admin jika role admin tersedia.
+        if ($adminRole !== null) {
+            User::firstOrCreate(
+                ['email' => 'admin@example.com'],
+                [
+                    'name' => 'Admin Test',
+                    'password' => 'password',
+                    'role_id' => $adminRole->id,
+                ]
+            );
+        }
     }
 }

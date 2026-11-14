@@ -2,19 +2,26 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role_id', 'store_id', 'umkm_id'])]
+#[Fillable([
+    'name',
+    'email',
+    'password',
+    'role_id',
+    'store_id',
+    'umkm_id',
+])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
     protected function casts(): array
@@ -25,7 +32,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function role()
+    public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
     }
@@ -45,18 +52,50 @@ class User extends Authenticatable
         return $this->role?->slug === 'store';
     }
 
-    public function store()
+    public function isStore(): bool
+    {
+        return $this->isStoreManager();
+    }
+
+    public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
     }
 
-    public function products()
+    // Toko yang dikelola oleh Store Manager.
+    public function managedStore(): HasOne
+    {
+        return $this->hasOne(Store::class, 'manager_id');
+    }
+
+    // Produk milik UMKM Owner.
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'umkm_id');
     }
 
-    public function settlements()
+    // Transaksi konsinyasi produk milik UMKM.
+    public function consignments(): HasMany
+    {
+        return $this->hasMany(
+            Consignment::class,
+            'umkm_id'
+        );
+    }
+
+    public function settlements(): HasMany
     {
         return $this->hasMany(Settlement::class, 'umkm_id');
+    }
+
+    // Relasi untuk akun yang berada di bawah UMKM.
+    public function umkmOwner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'umkm_id');
+    }
+
+    public function members(): HasMany
+    {
+        return $this->hasMany(User::class, 'umkm_id');
     }
 }

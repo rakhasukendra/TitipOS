@@ -31,11 +31,13 @@ class Settlement extends Model
         ];
     }
 
+    // Toko yang melakukan setoran.
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
     }
 
+    // UMKM yang menerima setoran.
     public function umkm(): BelongsTo
     {
         return $this->belongsTo(User::class, 'umkm_id');
@@ -44,5 +46,11 @@ class Settlement extends Model
     public function consignments(): HasMany
     {
         return $this->hasMany(Consignment::class);
+    }
+
+    // Status apakah setoran sudah diselesaikan.
+    public function getIsSettledAttribute(): bool
+    {
+        return $this->settled_at !== null;
     }
 }
