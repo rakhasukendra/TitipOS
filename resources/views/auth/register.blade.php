@@ -6,168 +6,192 @@
     <title>Daftar - TitipOS</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-[#F8FAFC]">
-    <div class="min-h-screen flex">
-        <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-cyan-600 via-blue-600 to-teal-600 p-12 items-center justify-center relative overflow-hidden">
-            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagonal-stripes.png')] opacity-10"></div>
-            <div class="absolute top-0 left-0 w-96 h-96 bg-cyan-400 rounded-full mix-blend-overlay filter blur-3xl opacity-30"></div>
-            <div class="absolute bottom-0 right-0 w-80 h-80 bg-blue-400 rounded-full mix-blend-overlay filter blur-3xl opacity-30"></div>
-            
-            <div class="relative z-10 text-white max-w-md">
-                <div class="flex items-center space-x-3 mb-8">
-                    <div class="w-12 h-12 bg-white/20 backdrop-blur-lg rounded-xl flex items-center justify-center">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                        </svg>
-                    </div>
-                    <span class="font-bold text-2xl">TitipOS</span>
-                </div>
-                <h1 class="text-4xl font-bold mb-4">Mulai Perjalanan Anda</h1>
-                <p class="text-lg text-cyan-100">Bergabung dengan ratusan UMKM yang telah merasakan kemudahan mengelola titipan dengan TitipOS.</p>
-                
-                <div class="mt-12 space-y-6">
-                    <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6">
-                        <div class="flex items-center space-x-4 mb-3">
-                            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
-                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
-                                </svg>
-                            </div>
-                            <span class="font-semibold text-lg">Untuk UMKM</span>
-                        </div>
-                        <p class="text-sm text-cyan-100">Kelola produk titipan, monitor penjualan real-time, dan terima settlement transparan.</p>
-                    </div>
-                    
-                    <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6">
-                        <div class="flex items-center space-x-4 mb-3">
-                            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2h-5L9 4H4zm7 5a1 1 0 10-2 0v1H8a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V9z" clip-rule="evenodd"/>
-                                </svg>
-                            </div>
-                            <span class="font-semibold text-lg">Untuk Toko</span>
-                        </div>
-                        <p class="text-sm text-cyan-100">Catat penjualan dengan mudah, kelola retur, dan lihat laporan lengkap setiap saat.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+<body>
+    <div class="min-h-screen lg:grid lg:grid-cols-2">
+        <div class="relative hidden overflow-hidden bg-ink-900 p-12 lg:flex lg:flex-col lg:justify-between">
+            <div class="pointer-events-none absolute -top-32 -left-24 size-96 rounded-full bg-sky-500/20 blur-3xl"></div>
+            <div class="pointer-events-none absolute -right-32 bottom-0 size-96 rounded-full bg-brand-600/25 blur-3xl"></div>
 
-        <div class="w-full lg:w-1/2 flex items-center justify-center p-8">
-            <div class="w-full max-w-md">
-                <div class="lg:hidden flex items-center justify-center space-x-3 mb-8">
-                    <div class="w-12 h-12 bg-gradient-to-br from-cyan-600 to-blue-600 rounded-xl flex items-center justify-center">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                        </svg>
-                    </div>
-                    <span class="font-bold text-2xl text-[#1F2937]">TitipOS</span>
-                </div>
+            <a href="{{ route('login') }}" class="relative flex items-center gap-3">
+                <span class="flex size-9 items-center justify-center rounded-[10px] bg-white/10 text-white ring-1 ring-white/15">
+                    <svg class="size-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                </span>
+                <span class="text-[15px] font-semibold tracking-tight text-white">TitipOS</span>
+            </a>
 
-                <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-                    <div class="mb-8 text-center lg:text-left">
-                        <h2 class="text-3xl font-bold text-[#1F2937] mb-2">Buat Akun</h2>
-                        <p class="text-[#4B5563]">Isi data diri untuk memulai</p>
+            <div class="relative max-w-md">
+                <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">Sistem Titipan UKM</p>
+                <h1 class="mt-4 text-[2.5rem] font-semibold leading-[1.1] tracking-tight text-white">
+                    Mulai dari sini,<br>tanpa ribet.
+                </h1>
+                <p class="mt-4 text-[15px] leading-relaxed text-white/60">
+                    Daftarkan usaha Anda dan jalankan alur titipan yang rapi sejak hari pertama.
+                </p>
+
+                <div class="mt-10 space-y-4">
+                    <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+                        <div class="flex items-center gap-2.5">
+                            <svg class="size-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                            </svg>
+                            <p class="text-sm font-semibold text-white">Untuk UMKM</p>
+                        </div>
+                        <p class="mt-2 text-[13px] leading-relaxed text-white/50">
+                            Kelola produk titipan, pantau penjualan, dan terima settlement yang jelas.
+                        </p>
                     </div>
 
-                    <form action="{{ route('register') }}" method="POST" class="space-y-5">
-                        @csrf
-                        
-                        <div>
-                            <label for="name" class="block text-sm font-semibold text-[#4B5563] mb-2">Nama Lengkap</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="w-5 h-5 text-[#9CA3AF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                    </svg>
-                                </div>
-                                <input id="name" name="name" type="text" value="{{ old('name') }}" required 
-                                    class="w-full pl-10 pr-4 py-3 border border-[#E5E7EB] rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition @error('name') border-red-500 @enderror">
-                                @error('name')
-                                    <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
+                    <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+                        <div class="flex items-center gap-2.5">
+                            <svg class="size-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 9l1.5-5h15L21 9M3 9h18M3 9v10a2 2 0 002 2h14a2 2 0 002-2V9M9 21v-6h6v6"/>
+                            </svg>
+                            <p class="text-sm font-semibold text-white">Untuk Toko</p>
                         </div>
-
-                        <div>
-                            <label for="email" class="block text-sm font-semibold text-[#4B5563] mb-2">Email</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="w-5 h-5 text-[#9CA3AF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                    </svg>
-                                </div>
-                                <input id="email" name="email" type="email" value="{{ old('email') }}" required 
-                                    class="w-full pl-10 pr-4 py-3 border border-[#E5E7EB] rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition @error('email') border-red-500 @enderror">
-                                @error('email')
-                                    <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="role_id" class="block text-sm font-semibold text-[#4B5563] mb-2">Tipe Akun</label>
-                            <select id="role_id" name="role_id" required 
-                                class="w-full px-4 py-3 border border-[#E5E7EB] rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition @error('role_id') border-red-500 @enderror">
-                                <option value="">Pilih tipe akun</option>
-                                @foreach($roles as $role)
-                                    <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
-                                        {{ $role->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('role_id')
-                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label for="password" class="block text-sm font-semibold text-[#4B5563] mb-2">Password</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="w-5 h-5 text-[#9CA3AF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                                    </svg>
-                                </div>
-                                <input id="password" name="password" type="password" required 
-                                    class="w-full pl-10 pr-4 py-3 border border-[#E5E7EB] rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition @error('password') border-red-500 @enderror">
-                                @error('password')
-                                    <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="password_confirmation" class="block text-sm font-semibold text-[#4B5563] mb-2">Konfirmasi Password</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="w-5 h-5 text-[#9CA3AF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
-                                </div>
-                                <input id="password_confirmation" name="password_confirmation" type="password" required 
-                                    class="w-full pl-10 pr-4 py-3 border border-[#E5E7EB] rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition">
-                            </div>
-                        </div>
-
-                        <button type="submit" 
-                            class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3.5 rounded-xl font-bold hover:shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 hover:scale-105">
-                            Daftar Sekarang
-                        </button>
-                    </form>
-
-                    <div class="mt-8 text-center">
-                        <p class="text-[#4B5563]">
-                            Sudah punya akun? 
-                            <a href="{{ route('login') }}" class="font-semibold text-cyan-600 hover:text-cyan-700">
-                                Login
-                            </a>
+                        <p class="mt-2 text-[13px] leading-relaxed text-white/50">
+                            Catat penjualan dan retur, lalu lihat laporan lengkap kapan saja.
                         </p>
                     </div>
                 </div>
             </div>
+
+            <p class="relative text-xs text-white/30">© {{ now()->year }} TitipOS</p>
+        </div>
+
+        <div class="flex min-h-screen items-center justify-center px-5 py-12 sm:px-8">
+            <div class="w-full max-w-[400px]">
+                <div class="mb-10 flex items-center gap-3 lg:hidden">
+                    <span class="flex size-9 items-center justify-center rounded-[10px] bg-ink-900 text-white">
+                        <svg class="size-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                    </span>
+                    <span class="text-[15px] font-semibold tracking-tight text-ink-900">TitipOS</span>
+                </div>
+
+                <div class="mb-8">
+                    <h2 class="text-2xl font-semibold tracking-tight text-ink-900">Buat akun baru</h2>
+                    <p class="mt-2 text-sm text-ink-500">Isi data diri untuk memulai.</p>
+                </div>
+
+                @if($errors->any())
+                    <div class="mb-6 flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3">
+                        <svg class="mt-px size-[18px] shrink-0 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                        </svg>
+                        <div class="space-y-1">
+                            @foreach($errors->all() as $error)
+                                <p class="text-sm font-medium text-rose-700">{{ $error }}</p>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
+                <form action="{{ route('register') }}" method="POST" class="space-y-5">
+                    @csrf
+
+                    <div>
+                        <label for="name" class="label">Nama lengkap</label>
+                        <input id="name" name="name" type="text" value="{{ old('name') }}" required autocomplete="name"
+                            placeholder="Nama Anda"
+                            class="field @error('name') field-error @enderror">
+                        @error('name')
+                            <p class="error-text">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="email" class="label">Email</label>
+                        <input id="email" name="email" type="email" value="{{ old('email') }}" required autocomplete="email"
+                            placeholder="nama@email.com"
+                            class="field @error('email') field-error @enderror">
+                        @error('email')
+                            <p class="error-text">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="role_id" class="label">Tipe akun</label>
+                        <select id="role_id" name="role_id" required class="field field-select @error('role_id') field-error @enderror">
+                            <option value="">Pilih tipe akun</option>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
+                                    {{ $role->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('role_id')
+                            <p class="error-text">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div id="store-fields" class="hidden space-y-5 rounded-xl border border-hairline bg-canvas/60 p-4">
+                        <div>
+                            <label for="store_name" class="label">Nama toko</label>
+                            <input id="store_name" name="store_name" type="text" value="{{ old('store_name') }}"
+                                placeholder="Contoh: Toko Berkah"
+                                class="field @error('store_name') field-error @enderror">
+                            @error('store_name')
+                                <p class="error-text">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="store_address" class="label">Alamat toko</label>
+                            <input id="store_address" name="store_address" type="text" value="{{ old('store_address') }}"
+                                placeholder="Alamat lengkap toko"
+                                class="field @error('store_address') field-error @enderror">
+                            @error('store_address')
+                                <p class="error-text">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="password" class="label">Password</label>
+                        <input id="password" name="password" type="password" required autocomplete="new-password"
+                            placeholder="••••••••"
+                            class="field @error('password') field-error @enderror">
+                        @error('password')
+                            <p class="error-text">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="password_confirmation" class="label">Konfirmasi password</label>
+                        <input id="password_confirmation" name="password_confirmation" type="password" required autocomplete="new-password"
+                            placeholder="••••••••"
+                            class="field">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-full py-3">
+                        Daftar sekarang
+                    </button>
+                </form>
+
+                <p class="mt-8 text-center text-sm text-ink-500">
+                    Sudah punya akun?
+                    <a href="{{ route('login') }}" class="font-semibold text-ink-900 underline decoration-hairline decoration-2 underline-offset-4 transition hover:decoration-ink-900">
+                        Masuk
+                    </a>
+                </p>
+            </div>
         </div>
     </div>
+
+    <script>
+        const roleSelect = document.getElementById('role_id');
+        const storeFields = document.getElementById('store-fields');
+        const storeRoleId = '{{ $storeRoleId }}';
+
+        function toggleStoreFields() {
+            storeFields.classList.toggle('hidden', roleSelect.value !== storeRoleId);
+        }
+
+        roleSelect.addEventListener('change', toggleStoreFields);
+        toggleStoreFields();
+    </script>
 </body>
 </html>

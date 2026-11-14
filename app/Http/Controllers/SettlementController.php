@@ -6,7 +6,9 @@ use App\Models\Consignment;
 use App\Models\Settlement;
 use App\Models\Store;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SettlementController extends Controller
 {
@@ -15,7 +17,14 @@ class SettlementController extends Controller
         $settlements = Settlement::with(['store', 'umkm'])
             ->latest()
             ->paginate(10);
-        return view('settlements.index', compact('settlements'));
+
+        $stats = [
+            'total' => Settlement::count(),
+            'paid' => (float) Settlement::whereNotNull('settled_at')->sum('net_amount'),
+            'pending' => (float) Settlement::whereNull('settled_at')->sum('net_amount'),
+        ];
+
+        return view('settlements.index', compact('settlements', 'stats'));
     }
 
     public function create()
@@ -24,6 +33,7 @@ class SettlementController extends Controller
         $umkms = User::whereHas('role', function ($q) {
             $q->where('slug', 'umkm');
         })->get();
+
         return view('settlements.create', compact('stores', 'umkms'));
     }
 
@@ -36,34 +46,41 @@ class SettlementController extends Controller
             'settlement_date' => 'required|date',
         ]);
 
-        $consignments = Consignment::where([
-            'store_id' => $validated['store_id'],
-        ])->with('product')
-         ->whereHas('product', function ($q) use ($validated) {
-             $q->where('umkm_id', $validated['umkm_id']);
-         })->get();
+        $consignments = $this->unsettledConsignments($validated['store_id'], $validated['umkm_id']);
+
+        if ($consignments->isEmpty()) {
+            return back()->withErrors([
+                'store_id' => 'Tidak ada titipan aktif yang belum di-settle untuk toko dan UMKM ini',
+            ])->withInput();
+        }
 
         $totalSales = 0;
         $totalReturns = 0;
 
         foreach ($consignments as $consignment) {
             $totalSales += $consignment->sales()->sum('amount');
-            $returnQty = $consignment->returns()->sum('quantity');
-            $totalReturns += $returnQty * $consignment->product->price;
+            $totalReturns += $consignment->returns()->sum('quantity') * $consignment->product->price;
         }
 
         $commission = ($totalSales - $totalReturns) * ($validated['commission_rate'] / 100);
         $netAmount = $totalSales - $totalReturns - $commission;
 
-        Settlement::create([
-            'store_id' => $validated['store_id'],
-            'umkm_id' => $validated['umkm_id'],
-            'total_sales' => $totalSales,
-            'total_returns' => $totalReturns,
-            'commission_rate' => $validated['commission_rate'],
-            'net_amount' => $netAmount,
-            'settlement_date' => $validated['settlement_date'],
-        ]);
+        DB::transaction(function () use ($validated, $consignments, $totalSales, $totalReturns, $netAmount) {
+            $settlement = Settlement::create([
+                'store_id' => $validated['store_id'],
+                'umkm_id' => $validated['umkm_id'],
+                'total_sales' => $totalSales,
+                'total_returns' => $totalReturns,
+                'commission_rate' => $validated['commission_rate'],
+                'net_amount' => $netAmount,
+                'settlement_date' => $validated['settlement_date'],
+            ]);
+
+            Consignment::whereKey($consignments->modelKeys())->update([
+                'settlement_id' => $settlement->id,
+                'status' => 'settled',
+            ]);
+        });
 
         return redirect()->route('settlements.index')->with('success', 'Settlement berhasil dibuat');
     }
@@ -71,13 +88,11 @@ class SettlementController extends Controller
     public function show(Settlement $settlement)
     {
         $settlement->load('store', 'umkm');
-        $consignments = Consignment::where([
-            'store_id' => $settlement->store_id,
-        ])->with(['product', 'sales', 'returns'])
-         ->whereHas('product', function ($q) use ($settlement) {
-             $q->where('umkm_id', $settlement->umkm_id);
-         })->get();
-        
+
+        $consignments = $settlement->consignments()
+            ->with(['product', 'sales', 'returns'])
+            ->get();
+
         return view('settlements.show', compact('settlement', 'consignments'));
     }
 
@@ -88,6 +103,7 @@ class SettlementController extends Controller
         }
 
         $settlement->update(['settled_at' => now()]);
+
         return redirect()->route('settlements.show', $settlement)->with('success', 'Settlement berhasil di-mark sebagai settled');
     }
 
@@ -97,7 +113,30 @@ class SettlementController extends Controller
             return back()->withErrors(['status' => 'Settlement yang sudah settled tidak bisa dihapus']);
         }
 
-        $settlement->delete();
+        DB::transaction(function () use ($settlement) {
+            $settlement->consignments()->update([
+                'settlement_id' => null,
+                'status' => 'active',
+            ]);
+
+            $settlement->delete();
+        });
+
         return redirect()->route('settlements.index')->with('success', 'Settlement berhasil dihapus');
+    }
+
+    /**
+     * Titipan aktif milik toko dan UMKM yang belum pernah masuk settlement.
+     */
+    private function unsettledConsignments(int $storeId, int $umkmId): Collection
+    {
+        return Consignment::where([
+            'store_id' => $storeId,
+        ])->with('product')
+            ->whereNull('settlement_id')
+            ->where('status', 'active')
+            ->whereHas('product', function ($query) use ($umkmId) {
+                $query->where('umkm_id', $umkmId);
+            })->get();
     }
 }

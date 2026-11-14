@@ -30,6 +30,21 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->role?->slug === 'admin';
+    }
+
+    public function isUmkm(): bool
+    {
+        return $this->role?->slug === 'umkm';
+    }
+
+    public function isStoreManager(): bool
+    {
+        return $this->role?->slug === 'store';
+    }
+
     public function store()
     {
         return $this->belongsTo(Store::class);
