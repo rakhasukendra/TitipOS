@@ -1,6 +1,8 @@
 node_modules/
 vendor/
 .env
+.env.backup
+.env.production
 *.log
 storage/*.key
 .phpunit.result.cache
@@ -14,3 +16,13 @@ storage/logs/*
 bootstrap/cache/*
 .DS_Store
 Thumbs.db
+
+# Perkakas AI agent (tidak diperlukan untuk menjalankan aplikasi)
+.agents/
+.claude/
+.cursor/
+AGENTS.md
+CLAUDE.md
+.mcp.json
+opencode.json
+boost.json
