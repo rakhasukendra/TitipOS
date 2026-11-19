@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ConsignmentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReturnController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SettlementController;
@@ -188,10 +189,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // LAPORAN
 // ==================================================
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:umkm,store,admin'])->group(function () {
 
-    Route::get('/reports', function () {
-        return view('reports.index');
-    })->name('reports.index');
+    Route::get('/reports', [ReportController::class, 'index'])
+        ->name('reports.index');
+
+    Route::get('/reports/export', [ReportController::class, 'export'])
+        ->name('reports.export');
 
 });

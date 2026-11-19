@@ -18,6 +18,7 @@ bootstrap/cache/*
 Thumbs.db
 
 # Perkakas AI agent (tidak diperlukan untuk menjalankan aplikasi)
+.freebuff/
 .agents/
 .claude/
 .cursor/

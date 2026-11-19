@@ -1,29 +1,32 @@
 @extends('layouts.app')
 
 @section('header', 'Laporan')
-@section('subheader', 'Rekap titipan, penjualan, dan retur seluruh toko')
+@section('subheader', auth()->user()->isAdmin()
+    ? 'Rekap titipan, penjualan, dan retur seluruh toko'
+    : (auth()->user()->isUmkm()
+        ? 'Rekap titipan, penjualan, dan retur produk Anda'
+        : 'Rekap titipan, penjualan, dan retur toko Anda'))
 
 @section('content')
-@php
-    $totalConsigned = \App\Models\Consignment::sum('quantity');
-    $totalSold = \App\Models\Sale::sum('quantity');
-    $totalReturned = \App\Models\ReturnItem::sum('quantity');
-
-    $metrics = [
-        ['label' => 'Titipan', 'value' => $totalConsigned . ' unit'],
-        ['label' => 'Terjual', 'value' => $totalSold . ' unit'],
-        ['label' => 'Retur', 'value' => $totalReturned . ' unit'],
-        ['label' => 'Sisa', 'value' => ($totalConsigned - $totalSold - $totalReturned) . ' unit'],
-    ];
-@endphp
 
 <div class="surface overflow-hidden">
-    <x-list-header eyebrow="Laporan" title="Ringkasan Operasional" :metrics="$metrics" />
+    <x-list-header eyebrow="Laporan" title="Ringkasan Operasional" :metrics="$metrics">
+        <x-slot:actions>
+            <a href="{{ route('reports.export') }}" class="btn btn-secondary btn-sm">
+                <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                <span>Export Excel</span>
+            </a>
+        </x-slot:actions>
+    </x-list-header>
 </div>
 
 <div class="mt-4 surface overflow-hidden">
     <div class="border-b border-hairline px-5 py-4">
-        <h2 class="text-sm font-semibold text-ink-900">Detail Titipan per Toko</h2>
+        <h2 class="text-sm font-semibold text-ink-900">
+            {{ auth()->user()->isAdmin() ? 'Detail Titipan per Toko' : (auth()->user()->isUmkm() ? 'Detail Titipan Produk Anda' : 'Detail Titipan Toko') }}
+        </h2>
     </div>
     <div class="overflow-x-auto">
         <table class="w-full min-w-[860px] text-left">
@@ -39,26 +42,23 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-hairline">
-                @foreach(\App\Models\Store::with('consignments.product', 'consignments.sales', 'consignments.returns')->get() as $store)
-                    @php
-                        $storeConsignments = $store->consignments;
-                        $totalConsignedStore = $storeConsignments->sum('quantity');
-                        $totalSoldStore = $storeConsignments->sum(function($c) { return $c->sales->sum('quantity'); });
-                        $totalReturnedStore = $storeConsignments->sum(function($c) { return $c->returns->sum('quantity'); });
-                        $totalValueStore = $storeConsignments->sum(function($c) { return $c->sales->sum('amount'); });
-                    @endphp
+                @forelse($storeRows as $row)
                     <tr class="transition hover:bg-canvas/60">
-                        <td class="td font-medium text-ink-900">{{ $store->name }}</td>
-                        <td class="td text-center tabular-nums">{{ $totalConsignedStore }}</td>
-                        <td class="td text-center font-semibold tabular-nums text-brand-600">{{ $totalSoldStore }}</td>
-                        <td class="td text-center font-semibold tabular-nums text-rose-600">{{ $totalReturnedStore }}</td>
-                        <td class="td text-center font-semibold tabular-nums text-ink-900">{{ $totalConsignedStore - $totalSoldStore - $totalReturnedStore }}</td>
-                        <td class="td text-right font-semibold tabular-nums text-ink-900">Rp {{ number_format($totalValueStore, 0, ',', '.') }}</td>
+                        <td class="td font-medium text-ink-900">{{ $row['name'] }}</td>
+                        <td class="td text-center tabular-nums">{{ $row['consigned'] }}</td>
+                        <td class="td text-center font-semibold tabular-nums text-brand-600">{{ $row['sold'] }}</td>
+                        <td class="td text-center font-semibold tabular-nums text-rose-600">{{ $row['returned'] }}</td>
+                        <td class="td text-center font-semibold tabular-nums text-ink-900">{{ $row['remaining'] }}</td>
+                        <td class="td text-right font-semibold tabular-nums text-ink-900">Rp {{ number_format($row['revenue'], 0, ',', '.') }}</td>
                         <td class="td text-right">
                             <a href="#" class="link-muted">Lihat</a>
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="7" class="td text-center text-ink-500">Belum ada data toko</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
@@ -69,13 +69,6 @@
         <div class="border-b border-hairline px-5 py-4">
             <h2 class="text-sm font-semibold text-ink-900">Laporan Penjualan Harian</h2>
         </div>
-        @php
-            $salesByDate = \App\Models\Sale::selectRaw('DATE(sale_date) as date, SUM(quantity) as qty, SUM(amount) as total')
-                ->groupBy('date')
-                ->orderBy('date', 'desc')
-                ->limit(10)
-                ->get();
-        @endphp
         @if($salesByDate->isEmpty())
             <p class="px-5 py-10 text-center text-sm text-ink-500">Belum ada data penjualan</p>
         @else
@@ -97,14 +90,6 @@
         <div class="border-b border-hairline px-5 py-4">
             <h2 class="text-sm font-semibold text-ink-900">Laporan Retur Harian</h2>
         </div>
-        @php
-            $returnsByDate = \App\Models\ReturnItem::selectRaw('DATE(return_date) as date, SUM(quantity) as qty')
-                ->with('consignment.product')
-                ->groupBy('date')
-                ->orderBy('date', 'desc')
-                ->limit(10)
-                ->get();
-        @endphp
         @if($returnsByDate->isEmpty())
             <p class="px-5 py-10 text-center text-sm text-ink-500">Belum ada data retur</p>
         @else
